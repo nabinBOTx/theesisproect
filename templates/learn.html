@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Learning Modules — CYBER//GUARD</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='cyber-theme.css') }}?v=2">
+  <style>
+    body {
+      background: #0f1419;
+      background-image: 
+        linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .grid-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(rgba(0, 217, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 217, 255, 0.05) 1px, transparent 1px);
+      background-size: 100px 100px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .main-content {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 48px;
+      padding: 16px 0;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-shield {
+      width: 28px;
+      height: 32px;
+      border: 2px solid var(--matrix-green);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      position: relative;
+      display: inline-block;
+      background: transparent;
+    }
+
+    .logo-shield::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 8px solid var(--matrix-green);
+    }
+
+    .logo-shield::after {
+      content: '';
+      position: absolute;
+      bottom: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      background: var(--matrix-green);
+      border-radius: 50%;
+    }
+
+    .logo-text {
+      font-weight: 700;
+      color: var(--matrix-green);
+      font-size: 24px;
+      letter-spacing: 2px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-nav a {
+      color: var(--cyan);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .header-nav a:hover {
+      color: #ffffff;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--cyan);
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 32px;
+      transition: color 0.2s;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .back-link:hover {
+      color: #ffffff;
+    }
+
+    .page-title {
+      font-size: 48px;
+      color: var(--matrix-green);
+      margin-bottom: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+    }
+
+    .page-subtitle {
+      color: var(--cyan);
+      font-size: 18px;
+      margin-bottom: 48px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .learning-modules {
+      display: grid;
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .module-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 255, 65, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .module-card:hover {
+      border-color: var(--matrix-green);
+      box-shadow: 0 8px 24px rgba(0, 255, 65, 0.15);
+    }
+
+    .module-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 24px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .module-header:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .module-title-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex: 1;
+    }
+
+    .module-title-row h2 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--matrix-green);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .module-category {
+      background: rgba(0, 217, 255, 0.15);
+      border: 1px solid rgba(0, 217, 255, 0.3);
+      color: var(--cyan);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .module-toggle {
+      background: transparent;
+      border: 1px solid rgba(0, 255, 65, 0.3);
+      color: var(--matrix-green);
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: all 0.2s;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .module-toggle:hover {
+      background: rgba(0, 255, 65, 0.1);
+      border-color: var(--matrix-green);
+    }
+
+    .toggle-icon {
+      display: inline-block;
+      transition: transform 0.2s;
+    }
+
+    .module-content {
+      padding: 0 24px 24px 24px;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .module-section {
+      margin-bottom: 24px;
+    }
+
+    .module-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .module-section h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--cyan);
+      border-bottom: 1px solid rgba(0, 217, 255, 0.2);
+      padding-bottom: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .module-section p {
+      line-height: 1.7;
+      color: #ffffff;
+      margin-bottom: 12px;
+      opacity: 0.9;
+    }
+
+    .key-points, .examples {
+      list-style: none;
+      padding: 0;
+    }
+
+    .key-points li, .examples li {
+      padding: 12px 0 12px 28px;
+      position: relative;
+      line-height: 1.7;
+      color: #ffffff;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      opacity: 0.9;
+    }
+
+    .key-points li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--matrix-green);
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .examples li:before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: var(--cyan);
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .key-points li:last-child, .examples li:last-child {
+      border-bottom: none;
+    }
+
+    .module-actions {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .btn-play {
+      background: linear-gradient(135deg, var(--matrix-green), #00cc33);
+      color: #001219;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-play:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 255, 65, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      .page-title {
+        font-size: 36px;
+      }
+
+      .module-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-overlay"></div>
+  <div class="main-content">
+    <header class="header">
+      <div class="logo-section">
+        <span class="logo-shield"></span>
+        <span class="logo-text">CYBER//GUARD</span>
+      </div>
+      <nav class="header-nav">
+        <a href="{{ url_for('cyber_landing') }}">Home</a>
+        <a href="{{ url_for('cyber_dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('games') }}">Games</a>
+      </nav>
+    </header>
+
+    <a href="{{ url_for('cyber_landing') }}" class="back-link">
+      <span>←</span>
+      <span>Back</span>
+    </a>
+
+    <h1 class="page-title">> LEARNING MODULES</h1>
+    <p class="page-subtitle">Study these cybersecurity topics to prepare for the games. Click on any module to expand and learn.</p>
+
+    <div class="learning-modules">
+      {% for module in modules %}
+      <div class="module-card">
+        <div class="module-header" onclick="toggleModule({{ loop.index0 }})">
+          <div class="module-title-row">
+            <h2>{{ module.title }}</h2>
+            <span class="module-category">{{ module.category }}</span>
+          </div>
+          <button class="module-toggle" aria-label="Toggle module">
+            <span class="toggle-icon" id="icon-{{ loop.index0 }}">▼</span>
+          </button>
+        </div>
+        <div class="module-content" id="module-{{ loop.index0 }}" style="display: none;">
+          <div class="module-section">
+            <h3>Overview</h3>
+            {% for paragraph in module.content %}
+            <p>{{ paragraph }}</p>
+            {% endfor %}
+          </div>
+          
+          <div class="module-section">
+            <h3>Key Points</h3>
+            <ul class="key-points">
+              {% for point in module.key_points %}
+              <li>{{ point }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          
+          <div class="module-section">
+            <h3>Examples</h3>
+            <ul class="examples">
+              {% for example in module.examples %}
+              <li>{{ example }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          
+          {% if module.category == "Passwords" %}
+          <div class="module-actions">
+            <form action="{{ url_for('password_ninja') }}" method="post" style="display:inline;">
+              <button class="btn-play" type="submit">> PLAY PASSWORD NINJA</button>
+            </form>
+          </div>
+          {% endif %}
+          {% if module.category == "Phishing" %}
+          <div class="module-actions">
+            <form action="{{ url_for('phish_hunter') }}" method="post" style="display:inline;">
+              <button class="btn-play" type="submit">> PLAY PHISH HUNTER</button>
+            </form>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <script>
+    function toggleModule(index) {
+      const content = document.getElementById('module-' + index);
+      const icon = document.getElementById('icon-' + index);
+      if (content.style.display === 'none') {
+        content.style.display = 'block';
+        icon.textContent = '▲';
+        icon.style.transform = 'rotate(0deg)';
+      } else {
+        content.style.display = 'none';
+        icon.textContent = '▼';
+        icon.style.transform = 'rotate(0deg)';
+      }
+    }
+
+    // Expand first module by default
+    document.addEventListener('DOMContentLoaded', function() {
+      if (document.getElementById('module-0')) {
+        toggleModule(0);
+      }
+    });
+  </script>
+</body>
+</html>

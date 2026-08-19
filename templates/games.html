@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Games — CYBER//GUARD</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='cyber-theme.css') }}?v=2">
+  <style>
+    body {
+      background: #0f1419;
+      background-image: 
+        linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .grid-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(rgba(0, 217, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 217, 255, 0.05) 1px, transparent 1px);
+      background-size: 100px 100px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .main-content {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 48px;
+      padding: 16px 0;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-shield {
+      width: 28px;
+      height: 32px;
+      border: 2px solid var(--matrix-green);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      position: relative;
+      display: inline-block;
+      background: transparent;
+    }
+
+    .logo-shield::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 8px solid var(--matrix-green);
+    }
+
+    .logo-shield::after {
+      content: '';
+      position: absolute;
+      bottom: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      background: var(--matrix-green);
+      border-radius: 50%;
+    }
+
+    .logo-text {
+      font-weight: 700;
+      color: var(--matrix-green);
+      font-size: 24px;
+      letter-spacing: 2px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-nav a {
+      color: var(--cyan);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .header-nav a:hover {
+      color: #ffffff;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--cyan);
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 32px;
+      transition: color 0.2s;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .back-link:hover {
+      color: #ffffff;
+    }
+
+    .page-title {
+      font-size: 48px;
+      color: var(--matrix-green);
+      margin-bottom: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+    }
+
+    .page-subtitle {
+      color: var(--cyan);
+      font-size: 18px;
+      margin-bottom: 48px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .section-header {
+      font-size: 24px;
+      color: var(--cyan);
+      margin: 48px 0 24px 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-header::before {
+      content: '>';
+      color: var(--matrix-green);
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .game-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 255, 65, 0.1);
+      border-radius: 8px;
+      padding: 24px;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .game-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--matrix-green), var(--cyan));
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .game-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--matrix-green);
+      box-shadow: 0 8px 24px rgba(0, 255, 65, 0.2);
+    }
+
+    .game-card:hover::before {
+      opacity: 1;
+    }
+
+    .game-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .game-title {
+      font-size: 22px;
+      color: var(--matrix-green);
+      margin-bottom: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+    }
+
+    .game-desc {
+      color: #ffffff;
+      font-size: 14px;
+      margin-bottom: 20px;
+      line-height: 1.6;
+      opacity: 0.9;
+    }
+
+    .game-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .game-difficulty {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .game-difficulty.easy {
+      background: rgba(0, 255, 65, 0.15);
+      color: var(--matrix-green);
+      border: 1px solid rgba(0, 255, 65, 0.3);
+    }
+
+    .game-difficulty.medium {
+      background: rgba(255, 165, 0, 0.15);
+      color: #ffa500;
+      border: 1px solid rgba(255, 165, 0, 0.3);
+    }
+
+    .game-difficulty.hard {
+      background: rgba(239, 106, 106, 0.15);
+      color: #ef6a6a;
+      border: 1px solid rgba(239, 106, 106, 0.3);
+    }
+
+    .btn-play {
+      background: linear-gradient(135deg, var(--matrix-green), #00cc33);
+      color: #001219;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 13px;
+      font-family: 'JetBrains Mono', monospace;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-play:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 255, 65, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      .games-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .page-title {
+        font-size: 36px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-overlay"></div>
+  <div class="main-content">
+    <header class="header">
+      <div class="logo-section">
+        <span class="logo-shield"></span>
+        <span class="logo-text">CYBER//GUARD</span>
+      </div>
+      <nav class="header-nav">
+        <a href="{{ url_for('cyber_landing') }}">Home</a>
+        <a href="{{ url_for('cyber_dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('learn') }}">Learn</a>
+      </nav>
+    </header>
+
+    <a href="{{ url_for('cyber_landing') }}" class="back-link">
+      <span>←</span>
+      <span>Back</span>
+    </a>
+
+    <h1 class="page-title">> GAMES & CHALLENGES</h1>
+    <p class="page-subtitle">Test your cybersecurity skills with interactive games and challenges. Level up your defense!</p>
+
+    <h2 class="section-header">Beginner Challenges</h2>
+    <div class="games-grid">
+      <form action="{{ url_for('password_ninja') }}" method="post" style="display: contents;">
+        <div class="game-card" onclick="this.closest('form').submit();">
+          <span class="game-icon">🥷</span>
+          <h3 class="game-title">Password Ninja</h3>
+          <p class="game-desc">Identify which passwords are strong and which are weak. Master the art of password security!</p>
+          <div class="game-footer">
+            <span class="game-difficulty easy">Easy</span>
+            <button type="submit" class="btn-play">> PLAY</button>
+          </div>
+        </div>
+      </form>
+
+      <form action="{{ url_for('phish_hunter') }}" method="post" style="display: contents;">
+        <div class="game-card" onclick="this.closest('form').submit();">
+          <span class="game-icon">🎣</span>
+          <h3 class="game-title">Phish Hunter</h3>
+          <p class="game-desc">Spot phishing attempts! Identify suspicious URLs, emails, and messages to stay safe online.</p>
+          <div class="game-footer">
+            <span class="game-difficulty easy">Easy</span>
+            <button type="submit" class="btn-play">> PLAY</button>
+          </div>
+        </div>
+      </form>
+
+      <form action="{{ url_for('spot_the_scam') }}" method="post" style="display: contents;">
+        <div class="game-card" onclick="this.closest('form').submit();">
+          <span class="game-icon">🚨</span>
+          <h3 class="game-title">Spot the Scam</h3>
+          <p class="game-desc">Identify various scams and fraud attempts! Learn to recognize lottery scams, tech support scams, and more.</p>
+          <div class="game-footer">
+            <span class="game-difficulty easy">Easy</span>
+            <button type="submit" class="btn-play">> PLAY</button>
+          </div>
+        </div>
+      </form>
+
+      <form action="{{ url_for('device_defender') }}" method="post" style="display: contents;">
+        <div class="game-card" onclick="this.closest('form').submit();">
+          <span class="game-icon">📱</span>
+          <h3 class="game-title">Device Defender</h3>
+          <p class="game-desc">Pick the right settings to secure a new phone. Configure security settings for maximum protection.</p>
+          <div class="game-footer">
+            <span class="game-difficulty easy">Easy</span>
+            <button type="submit" class="btn-play">> PLAY</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <h2 class="section-header">Daily Missions</h2>
+    <div class="games-grid">
+      <form action="{{ url_for('safe_to_click') }}" method="post" style="display: contents;">
+        <div class="game-card" onclick="this.closest('form').submit();">
+          <span class="game-icon">🔗</span>
+          <h3 class="game-title">Is This Safe to Click?</h3>
+          <p class="game-desc">Quickly identify which links are safe to click and which are dangerous. Perfect for daily practice!</p>
+          <div class="game-footer">
+            <span class="game-difficulty easy">Easy</span>
+            <button type="submit" class="btn-play">> PLAY</button>
+          </div>
+        </div>
+      </form>
+
+      <form action="{{ url_for('choose_2fa') }}" method="post" style="display: contents;">
+        <div class="game-card" onclick="this.closest('form').submit();">
+          <span class="game-icon">🔐</span>
+          <h3 class="game-title">Choose the Best 2FA Method</h3>
+          <p class="game-desc">Learn which two-factor authentication methods are most secure for different situations.</p>
+          <div class="game-footer">
+            <span class="game-difficulty medium">Medium</span>
+            <button type="submit" class="btn-play">> PLAY</button>
+          </div>
+        </div>
+      </form>
+
+      <form action="{{ url_for('inbox') }}" method="post" style="display: contents;">
+        <div class="game-card" onclick="this.closest('form').submit();">
+          <span class="game-icon">📧</span>
+          <h3 class="game-title">Inbox Investigator</h3>
+          <p class="game-desc">Analyze emails and identify phishing attempts. Become an expert at spotting malicious messages.</p>
+          <div class="game-footer">
+            <span class="game-difficulty medium">Medium</span>
+            <button type="submit" class="btn-play">> PLAY</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

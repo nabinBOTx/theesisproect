@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="card">
+  <div class="card-header">
+    <div class="progress-wrap">
+      <div>Email {{ number }} of {{ total }}</div>
+      <div class="progress"><div class="progress-bar" style="width: {{ (number/total*100)|round(0, 'floor') }}%"></div></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="email">
+      <div class="email-meta">
+        <div><strong>From:</strong> {{ email.sender }}</div>
+        <div><strong>Subject:</strong> {{ email.subject }}</div>
+      </div>
+      <div class="email-preview">{{ email.preview }}</div>
+      <div class="email-body">{{ email.body }}</div>
+      <div class="email-link">
+        <a href="#" data-url="{{ email.link_url }}" class="fake-link" title="Hover to preview real URL">🔗 {{ email.link_text }}</a>
+        <span class="link-preview">{{ email.link_url }}</span>
+        <button type="button" class="pill toggle" onclick="UI.openModal('<h3>Preview</h3><p>{{ email.link_url }}</p><iframe class=\'modal-frame\' srcdoc=\'<p style=\\'font-family:Inter,Arial,sans-serif;color:#555\\'>Simulated preview for training. Never open unknown links.</p>\'></iframe>')">Preview</button>
+      </div>
+    </div>
+    <form action="{{ url_for('inbox_action') }}" method="post" class="actions" style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button class="primary" type="submit" name="action" value="report" title="Flag suspicious emails">🚩 Report</button>
+      <button class="primary" type="submit" name="action" value="open" title="Open if you're confident it's safe">📬 Open</button>
+      <button class="primary" type="submit" name="action" value="delete" title="Discard suspicious messages">🗑️ Delete</button>
+    </form>
+  </div>
+</section>
+<script src="{{ url_for('static', filename='inbox.js') }}"></script>
+{% endblock %}
+
+

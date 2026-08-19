@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Login — CYBER//GUARD</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='cyber-theme.css') }}">
+  <style>
+    body {
+      background: #0f1419;
+      background-image: 
+        linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .grid-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(rgba(0, 217, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 217, 255, 0.05) 1px, transparent 1px);
+      background-size: 100px 100px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .login-container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 440px;
+      padding: 24px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--cyan);
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 32px;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: #ffffff;
+    }
+
+    .login-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 255, 65, 0.1);
+      border-radius: 8px;
+      padding: 40px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .logo-section {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .logo-shield {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .logo-text {
+      font-weight: 700;
+      color: var(--matrix-green);
+      font-size: 28px;
+      letter-spacing: 2px;
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 8px;
+    }
+
+    .logo-subtitle {
+      color: var(--cyan);
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .terminal-prompt {
+      background: #04102a;
+      border-radius: 6px;
+      padding: 12px 16px;
+      color: var(--matrix-green);
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 24px;
+      border: 1px solid rgba(0, 255, 65, 0.1);
+    }
+
+    .terminal-prompt .prompt {
+      color: var(--cyan);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      color: var(--cyan);
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .form-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(0, 255, 65, 0.2);
+      padding: 12px 16px;
+      border-radius: 6px;
+      color: #ffffff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--matrix-green);
+      box-shadow: 0 0 0 3px rgba(0, 255, 65, 0.1);
+    }
+
+    .form-input::placeholder {
+      color: rgba(127, 140, 149, 0.5);
+    }
+
+    .btn-login {
+      width: 100%;
+      background: linear-gradient(90deg, var(--matrix-green), #00cc33);
+      color: #001219;
+      padding: 14px 24px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 255, 65, 0.3);
+    }
+
+    .divider {
+      text-align: center;
+      margin: 24px 0;
+      color: var(--muted);
+      font-size: 12px;
+      position: relative;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 40%;
+      height: 1px;
+      background: rgba(0, 255, 65, 0.2);
+    }
+
+    .divider::before {
+      left: 0;
+    }
+
+    .divider::after {
+      right: 0;
+    }
+
+    .signup-link {
+      text-align: center;
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .signup-link a {
+      color: var(--cyan);
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      transition: color 0.2s;
+    }
+
+    .signup-link a:hover {
+      color: var(--matrix-green);
+      text-decoration: underline;
+    }
+
+    .error-message {
+      background: rgba(239, 106, 106, 0.1);
+      border: 1px solid rgba(239, 106, 106, 0.3);
+      color: #ef6a6a;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-overlay"></div>
+  <div class="login-container">
+    <a href="{{ url_for('cyber_landing') }}" class="back-link">
+      <span>←</span>
+      <span>Back</span>
+    </a>
+
+    <div class="login-card">
+      <div class="logo-section">
+        <div class="logo-shield">🛡️</div>
+        <div class="logo-text">CYBER//GUARD</div>
+        <div class="logo-subtitle">> ACCESS GRANTED</div>
+      </div>
+
+      <div class="terminal-prompt">
+        <span class="prompt">$</span> authenticate_user.sh
+      </div>
+
+      <div class="error-message" id="errorMessage"></div>
+
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label class="form-label" for="username">Username</label>
+          <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            class="form-input" 
+            placeholder="> enter_username"
+            required
+            autocomplete="username"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            class="form-input" 
+            placeholder="> ********"
+            required
+            autocomplete="current-password"
+          >
+        </div>
+
+        <button type="submit" class="btn-login">> LOGIN</button>
+      </form>
+
+      <div class="divider">OR</div>
+
+      <div class="signup-link">
+        Don't have an account? <a href="{{ url_for('cyber_signup') }}">> SIGN UP</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function handleLogin(event) {
+      event.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const errorMsg = document.getElementById('errorMessage');
+
+      // Simple mock authentication
+      const mockUsers = window.MOCK?.users || [];
+      const user = mockUsers.find(u => u.username === username.toLowerCase());
+
+      if (user && password) {
+        // Store user in sessionStorage
+        sessionStorage.setItem('currentUser', JSON.stringify(user));
+        // Redirect to dashboard
+        window.location.href = '{{ url_for("cyber_dashboard") }}';
+      } else {
+        errorMsg.textContent = '> ERROR: Invalid credentials. Access denied.';
+        errorMsg.classList.add('show');
+        setTimeout(() => {
+          errorMsg.classList.remove('show');
+        }, 5000);
+      }
+    }
+
+    // Check if already logged in
+    if (sessionStorage.getItem('currentUser')) {
+      window.location.href = '{{ url_for("cyber_dashboard") }}';
+    }
+  </script>
+  <script src="{{ url_for('static', filename='mock.js') }}"></script>
+</body>
+</html>
+

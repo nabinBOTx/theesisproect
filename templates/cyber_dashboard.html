@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Dashboard — CYBER//GUARD</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='cyber-theme.css') }}">
+  <style>
+    body {
+      background: #0f1419;
+      background-image: 
+        linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .grid-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(rgba(0, 217, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 217, 255, 0.05) 1px, transparent 1px);
+      background-size: 100px 100px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .main-content {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      padding: 16px 0;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-shield {
+      font-size: 24px;
+      color: var(--matrix-green);
+    }
+
+    .logo-text {
+      font-weight: 700;
+      color: var(--matrix-green);
+      font-size: 24px;
+      letter-spacing: 2px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-nav a {
+      color: var(--cyan);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .header-nav a:hover {
+      color: #ffffff;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #ffffff;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--matrix-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #001219;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .welcome-section {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 255, 65, 0.1);
+      border-radius: 8px;
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+
+    .welcome-title {
+      font-size: 32px;
+      color: var(--matrix-green);
+      margin-bottom: 8px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .welcome-subtitle {
+      color: var(--cyan);
+      font-size: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 255, 65, 0.1);
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      color: var(--matrix-green);
+      font-size: 32px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .section-title {
+      font-size: 24px;
+      color: #ffffff;
+      margin-bottom: 16px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .game-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 255, 65, 0.1);
+      border-radius: 8px;
+      padding: 24px;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      color: inherit;
+    }
+
+    .game-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--matrix-green);
+      box-shadow: 0 8px 24px rgba(0, 255, 65, 0.2);
+    }
+
+    .game-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .game-title {
+      font-size: 20px;
+      color: var(--matrix-green);
+      margin-bottom: 8px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .game-desc {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .game-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .game-difficulty {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .game-difficulty.easy {
+      background: rgba(0, 255, 65, 0.2);
+      color: var(--matrix-green);
+    }
+
+    .game-difficulty.medium {
+      background: rgba(255, 165, 0, 0.2);
+      color: #ffa500;
+    }
+
+    .game-difficulty.hard {
+      background: rgba(239, 106, 106, 0.2);
+      color: #ef6a6a;
+    }
+
+    .game-progress {
+      color: var(--cyan);
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--matrix-green), var(--cyan));
+      transition: width 0.3s;
+    }
+
+    .badges-section {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 255, 65, 0.1);
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+
+    .badges-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .badge-item {
+      background: rgba(0, 255, 65, 0.1);
+      border: 1px solid rgba(0, 255, 65, 0.3);
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge-icon {
+      font-size: 24px;
+    }
+
+    .badge-name {
+      color: var(--matrix-green);
+      font-weight: 700;
+      font-size: 14px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .logout-btn {
+      background: transparent;
+      border: 1px solid rgba(239, 106, 106, 0.3);
+      color: #ef6a6a;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .logout-btn:hover {
+      background: rgba(239, 106, 106, 0.1);
+      border-color: rgba(239, 106, 106, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-overlay"></div>
+  <div class="main-content">
+    <header class="header">
+      <div class="logo-section">
+        <span class="logo-shield">🛡️</span>
+        <span class="logo-text">CYBER//GUARD</span>
+      </div>
+      <nav class="header-nav">
+        <a href="{{ url_for('learn') }}">Learn</a>
+        <a href="{{ url_for('cyber_dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('cyber_leaderboard') }}">Leaderboard</a>
+        <a href="{{ url_for('cyber_profile') }}">Profile</a>
+        <div class="user-info">
+          <div class="user-avatar" id="userAvatar">U</div>
+          <span id="userName">User</span>
+        </div>
+        <button class="logout-btn" onclick="handleLogout()">> LOGOUT</button>
+      </nav>
+    </header>
+
+    <section class="welcome-section">
+      <h1 class="welcome-title" id="welcomeTitle">> WELCOME, USER</h1>
+      <p class="welcome-subtitle">Ready to level up your cybersecurity skills?</p>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total XP</div>
+          <div class="stat-value" id="totalXP">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Level</div>
+          <div class="stat-value" id="userLevel">1</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Games Completed</div>
+          <div class="stat-value" id="gamesCompleted">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Badges Earned</div>
+          <div class="stat-value" id="badgesCount">0</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">> AVAILABLE GAMES</h2>
+      <div class="games-grid" id="gamesGrid">
+        <!-- Games will be loaded via JavaScript -->
+      </div>
+    </section>
+
+    <section class="badges-section">
+      <h2 class="section-title">> RECENT BADGES</h2>
+      <div class="badges-grid" id="badgesGrid">
+        <!-- Badges will be loaded via JavaScript -->
+      </div>
+    </section>
+  </div>
+
+  <script>
+    function loadUserData() {
+      const currentUserStr = sessionStorage.getItem('currentUser');
+      if (!currentUserStr) {
+        window.location.href = '{{ url_for("cyber_login") }}';
+        return;
+      }
+
+      const currentUser = JSON.parse(currentUserStr);
+      const mockUsers = window.MOCK?.users || [];
+      const user = mockUsers.find(u => u.id === currentUser.id) || currentUser;
+
+      // Update UI
+      document.getElementById('userName').textContent = user.displayName || user.username;
+      document.getElementById('userAvatar').textContent = (user.displayName || user.username).charAt(0).toUpperCase();
+      document.getElementById('welcomeTitle').textContent = `> WELCOME, ${(user.displayName || user.username).toUpperCase()}`;
+      
+      document.getElementById('totalXP').textContent = user.totalXP || 0;
+      document.getElementById('userLevel').textContent = user.level || 1;
+      
+      // Calculate games completed
+      const progress = user.progress || {};
+      const gamesCompleted = Object.values(progress).filter(p => p >= 100).length;
+      document.getElementById('gamesCompleted').textContent = gamesCompleted;
+      
+      // Badges
+      const badges = user.badges || [];
+      document.getElementById('badgesCount').textContent = badges.length;
+
+      // Load games
+      loadGames(user);
+
+      // Load badges
+      loadBadges(user, badges);
+    }
+
+    function loadGames(user) {
+      const games = window.MOCK?.games || [];
+      const gamesGrid = document.getElementById('gamesGrid');
+      const gameRoutes = {
+        'phish_hunter': '{{ url_for("phish_hunter") }}',
+        'password_defense': '{{ url_for("password_ninja") }}',
+        'social_engineering': '{{ url_for("spot_the_scam") }}',
+        'network_challenge': '{{ url_for("device_defender") }}',
+        'choose_2fa': '{{ url_for("choose_2fa") }}',
+        'safe_to_click': '{{ url_for("safe_to_click") }}',
+        'inbox': '{{ url_for("inbox") }}'
+      };
+
+      const gameIcons = {
+        'phish_hunter': '🎣',
+        'password_defense': '🗝️',
+        'social_engineering': '🎭',
+        'network_challenge': '🌐',
+        'choose_2fa': '🔐',
+        'safe_to_click': '🖱️',
+        'inbox': '📧'
+      };
+
+      gamesGrid.innerHTML = games.map(game => {
+        const progress = user.progress?.[game.id] || 0;
+        const route = gameRoutes[game.id] || '#';
+        const icon = gameIcons[game.id] || '🎮';
+
+        return `
+          <a href="${route}" class="game-card">
+            <div class="game-icon">${icon}</div>
+            <h3 class="game-title">${game.title}</h3>
+            <p class="game-desc">${game.desc}</p>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${progress}%"></div>
+            </div>
+            <div class="game-meta">
+              <span class="game-difficulty ${game.difficulty.toLowerCase()}">${game.difficulty}</span>
+              <span class="game-progress">${progress}% Complete</span>
+            </div>
+          </a>
+        `;
+      }).join('');
+
+      // Also add additional games from the app
+      const additionalGames = [
+        { id: 'choose_2fa', title: 'Choose 2FA', desc: 'Select the best 2FA method for each scenario', difficulty: 'Medium', icon: '🔐' },
+        { id: 'safe_to_click', title: 'Safe to Click', desc: 'Identify safe and dangerous links', difficulty: 'Easy', icon: '🖱️' },
+        { id: 'inbox', title: 'Inbox Investigator', desc: 'Analyze emails and identify phishing attempts', difficulty: 'Medium', icon: '📧' }
+      ];
+
+      additionalGames.forEach(game => {
+        const progress = user.progress?.[game.id] || 0;
+        const route = gameRoutes[game.id] || '#';
+        
+        gamesGrid.innerHTML += `
+          <a href="${route}" class="game-card">
+            <div class="game-icon">${game.icon}</div>
+            <h3 class="game-title">${game.title}</h3>
+            <p class="game-desc">${game.desc}</p>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${progress}%"></div>
+            </div>
+            <div class="game-meta">
+              <span class="game-difficulty ${game.difficulty.toLowerCase()}">${game.difficulty}</span>
+              <span class="game-progress">${progress}% Complete</span>
+            </div>
+          </a>
+        `;
+      });
+    }
+
+    function loadBadges(user, badges) {
+      const achievements = window.MOCK?.achievements || [];
+      const badgesGrid = document.getElementById('badgesGrid');
+
+      if (badges.length === 0) {
+        badgesGrid.innerHTML = '<p style="color: var(--muted);">No badges earned yet. Start playing games to earn achievements!</p>';
+        return;
+      }
+
+      badgesGrid.innerHTML = badges.map(badgeId => {
+        const achievement = achievements.find(a => a.id === badgeId);
+        if (!achievement) return '';
+
+        return `
+          <div class="badge-item">
+            <span class="badge-icon">${achievement.icon}</span>
+            <span class="badge-name">${achievement.name}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function handleLogout() {
+      sessionStorage.removeItem('currentUser');
+      window.location.href = '{{ url_for("cyber_login") }}';
+    }
+
+    // Load data on page load
+    document.addEventListener('DOMContentLoaded', loadUserData);
+  </script>
+  <script src="{{ url_for('static', filename='mock.js') }}"></script>
+</body>
+</html>
+

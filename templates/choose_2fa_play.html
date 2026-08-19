@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="card">
+    <div class="card-header">
+        <div class="progress-wrap">
+            <div>Question {{ number }} of {{ total }}</div>
+            <div class="progress">
+                <div class="progress-bar" style="width: {{ (number/total*100)|round(0, 'floor') }}%"></div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <p class="prompt" style="font-size: 18px; margin-bottom: 24px;">
+            {{ scenario.scenario }}
+        </p>
+        <form action="{{ url_for('choose_2fa_answer') }}" method="post" class="choices">
+            {% for option in scenario.options %}
+            <label class="choice choice-hover" style="cursor: pointer;">
+                <input class="visually-hidden" type="radio" name="choice" value="{{ loop.index0 }}" required />
+                <span class="bullet"></span>
+                <span class="choice-text">{{ option }}</span>
+            </label>
+            {% endfor %}
+            <div class="actions">
+                <button class="primary" type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
+

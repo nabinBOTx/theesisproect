@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="hero">
+    <h1>🔗 Is This Safe to Click?</h1>
+    <p>Daily Mission: Quickly identify which links are safe to click and which are dangerous.</p>
+    <div style="margin-top: 24px;">
+        <form action="{{ url_for('safe_to_click') }}" method="post">
+            <button class="primary" type="submit">Start Mission</button>
+        </form>
+    </div>
+</section>
+<section class="features">
+    <div class="feature">
+        <h3>⚡ Quick Decision</h3>
+        <p>Practice making fast, accurate decisions about link safety in real-world scenarios.</p>
+    </div>
+    <div class="feature">
+        <h3>🎯 Spot Red Flags</h3>
+        <p>Learn to recognize suspicious URLs, shortened links, and deceptive domains.</p>
+    </div>
+    <div class="feature">
+        <h3>🛡️ Stay Safe</h3>
+        <p>Improve your ability to identify safe vs. dangerous links before clicking.</p>
+    </div>
+</section>
+<section style="margin-top: 48px;">
+    <h2 style="color: var(--matrix-green); margin-bottom: 24px;">📚 Learning Modules</h2>
+    <div class="features">
+        <div class="feature">
+            <h3>Safe to Click Guidelines</h3>
+            <p>Learn to evaluate URLs for danger indicators and identify malicious links.</p>
+            <a href="{{ url_for('learn') }}" style="color: var(--cyan); text-decoration: underline;">Read more →</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="hero">
+    <h1>🚨 Spot the Scam</h1>
+    <p>Identify various scams and fraud attempts! Learn to recognize different types of scams and protect yourself.</p>
+    <div style="margin-top: 24px;">
+        <form action="{{ url_for('spot_the_scam') }}" method="post">
+            <button class="primary" type="submit">Start Game</button>
+        </form>
+    </div>
+</section>
+<section class="features">
+    <div class="feature">
+        <h3>🎯 Recognize Scams</h3>
+        <p>Learn to identify lottery scams, tech support scams, inheritance fraud, and more.</p>
+    </div>
+    <div class="feature">
+        <h3>💡 Understand Tactics</h3>
+        <p>Get explanations for each scenario to understand common scam patterns and red flags.</p>
+    </div>
+    <div class="feature">
+        <h3>🛡️ Stay Safe</h3>
+        <p>Improve your ability to spot scams and avoid becoming a victim of fraud.</p>
+    </div>
+</section><section style="margin-top: 48px;">
+    <h2 style="color: var(--matrix-green); margin-bottom: 24px;">📚 Learning Modules</h2>
+    <div class="features">
+        <div class="feature">
+            <h3>Spot the Scam Techniques</h3>
+            <p>Understand the psychology behind scams and learn to identify red flags in common fraud schemes.</p>
+            <a href="{{ url_for('learn') }}" style="color: var(--cyan); text-decoration: underline;">Read more →</a>
+        </div>
+        <div class="feature">
+            <h3>Social Engineering</h3>
+            <p>Learn how attackers manipulate human psychology to bypass security measures and steal information.</p>
+            <a href="{{ url_for('learn') }}" style="color: var(--cyan); text-decoration: underline;">Read more →</a>
+        </div>
+    </div>
+</section>{% endblock %}
+

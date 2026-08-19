@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="card">
+  <div class="card-header">Classify each item</div>
+  <div class="card-body">
+    <form action="{{ url_for('phish_submit') }}" method="post" class="choices">
+      {% for idx, item in items %}
+      <div class="choice">
+        <div style="grid-column: 1 / -1; font-weight: 600;">{{ item.text }}</div>
+        <label>
+          <input type="radio" name="item_{{ idx }}" value="phish" required {{ 'checked' if saved.get(idx) is sameas true else '' }} />
+          <span>Phish</span>
+        </label>
+        <label>
+          <input type="radio" name="item_{{ idx }}" value="legit" required {{ '' if saved.get(idx) is sameas true else 'checked' if saved.get(idx) is sameas false else '' }} />
+          <span>Legit</span>
+        </label>
+      </div>
+      {% endfor %}
+      <div class="actions">
+        <button class="primary" type="submit">Submit</button>
+      </div>
+    </form>
+  </div>
+ </section>
+{% endblock %}
+
+

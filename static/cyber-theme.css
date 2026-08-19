@@ -1,0 +1,48 @@
+/* Cyber theme for gamified cybersecurity site */
+:root{
+  --bg-1:#0a0e27;
+  --bg-2:#0f1419;
+  --matrix-green:#00ff41;
+  --cyan:#00d9ff;
+  --electric:#00a3ff;
+  --muted:#7f8c95;
+  --glass: rgba(255,255,255,0.03);
+}
+*{box-sizing:border-box}
+html,body{height:100%;}
+body{
+  margin:0; font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace;
+  background:linear-gradient(180deg,var(--bg-1),var(--bg-2));
+  color:var(--muted); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+}
+.container{max-width:1100px;margin:48px auto;padding:24px}
+.header{display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{font-weight:700;color:var(--matrix-green);font-size:20px;letter-spacing:1px}
+.nav a{color:var(--muted);margin-left:12px;text-decoration:none}
+.hero{padding:48px;border-radius:8px;background:linear-gradient(90deg, rgba(0,0,0,0.25), rgba(255,255,255,0.02));box-shadow: 0 6px 30px rgba(0,0,0,0.6);position:relative;overflow:hidden}
+.hero h1{color:var(--matrix-green);font-size:40px;margin:0}
+.hero p{color:var(--cyan);margin-top:8px}
+.card{background:var(--glass);border:1px solid rgba(0,255,65,0.06);padding:16px;border-radius:6px;color:#cfeff8}
+.button{display:inline-block;padding:10px 14px;border-radius:6px;background:linear-gradient(90deg,var(--cyan),var(--electric));color:#001219;text-decoration:none;font-weight:700}
+.terminal{
+  background:#04102a;border-radius:6px;padding:18px;color:var(--matrix-green);font-size:14px;line-height:1.5;border:1px solid rgba(0,255,65,0.06);
+}
+.terminal .prompt{color:var(--cyan)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:18px}
+.game-tile{padding:18px;border-radius:8px;background:linear-gradient(180deg, rgba(0,0,0,0.18), rgba(255,255,255,0.02));border:1px solid rgba(0,217,255,0.04)}
+.game-tile h3{margin:0;color:#bdfff5}
+.progress{height:10px;background:rgba(255,255,255,0.04);border-radius:6px;margin-top:12px;overflow:hidden}
+.progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--matrix-green),var(--cyan));}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(0,255,65,0.06);color:var(--matrix-green);font-weight:700}
+.scanline{pointer-events:none;position:fixed;left:0;top:0;right:0;bottom:0;background-image:linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px);background-size:100% 4px;mix-blend-mode:overlay}
+.glitch{position:relative}
+.glitch::before,.glitch::after{content:attr(data-text);position:absolute;left:0;top:0;opacity:0.6}
+.glitch::before{color:var(--matrix-green);transform:translate(2px,-2px);clip-path:rect(0,9999px,60%,0)}
+.glitch::after{color:var(--cyan);transform:translate(-2px,2px);clip-path:rect(40%,9999px,100%,0)}
+.footer{margin-top:36px;color:var(--muted);font-size:13px}
+.form{display:flex;flex-direction:column;gap:8px}
+.input{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:10px;border-radius:6px;color:#e6fbff}
+.small{font-size:13px;color:var(--muted)}
+.link{color:var(--cyan);text-decoration:underline}
+@media (max-width:600px){.hero h1{font-size:28px}.container{margin:18px}}

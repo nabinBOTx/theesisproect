@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="hero">
+    <h1>Test your cybersecurity awareness</h1>
+    <p>Choose a mode below to start learning with quick, fun challenges.</p>
+    <div class="hero-badges">
+        <span class="chip">Phishing</span>
+        <span class="chip">Passwords</span>
+        <span class="chip">MFA</span>
+        <span class="chip">Safe Browsing</span>
+    </div>
+    <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:8px;">
+        <a href="{{ url_for('games') }}">
+            <button class="primary" type="button">🎮 Play Games</button>
+        </a>
+    </div>
+</section>
+<section class="features">
+    <div class="feature">
+        <h3>Realistic Scenarios</h3>
+        <p>See examples of tricky emails, links, and files attackers use.</p>
+    </div>
+    <div class="feature">
+        <h3>Immediate Feedback</h3>
+        <p>Every question includes a short explanation to reinforce learning.</p>
+    </div>
+    <div class="feature">
+        <h3>Replay to Improve</h3>
+        <p>Questions are shuffled so each run-through is fresh.</p>
+    </div>
+    </section>
+{% endblock %}
+
+

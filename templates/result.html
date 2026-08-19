@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="result">
+    <h2>Your score: {{ score }} / {{ total }}</h2>
+    <div class="score-bar">
+        <div class="score-fill" style="width: {{ (score/total*100)|round(0, 'floor') }}%"></div>
+    </div>
+    <p>Review the explanations below to reinforce your knowledge.</p>
+
+    <ol class="review-list">
+        {% for item in details %}
+        <li class="review-item">
+            <div class="review-q">{{ item.prompt }}</div>
+            <div class="review-a {{ 'correct' if item.is_correct else 'incorrect' }}">
+                <div><strong>Your answer:</strong> {{ item.choices[item.selected] }}</div>
+                <div><strong>Correct answer:</strong> {{ item.choices[item.correct_index] }}</div>
+                <div class="explanation">{{ item.explanation }}</div>
+                <div class="chip">{{ item.category }}</div>
+            </div>
+        </li>
+        {% endfor %}
+    </ol>
+
+    <form action="{{ url_for('start') }}" method="post">
+        <button class="primary" type="submit">Play Again</button>
+    </form>
+</section>
+<script src="{{ url_for('static', filename='confetti.js') }}"></script>
+<script>
+  (function(){
+    var score = {{ score }};
+    var total = {{ total }};
+    if (window.launchConfetti && score/total >= 0.8) {
+      launchConfetti();
+    }
+  })();
+ </script>
+{% endblock %}
+
+

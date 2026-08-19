@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sign Up — CYBER//GUARD</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='cyber-theme.css') }}">
+  <style>
+    body {
+      background: #0f1419;
+      background-image: 
+        linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .grid-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(rgba(0, 217, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 217, 255, 0.05) 1px, transparent 1px);
+      background-size: 100px 100px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .signup-container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 440px;
+      padding: 24px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--cyan);
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 32px;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: #ffffff;
+    }
+
+    .signup-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 255, 65, 0.1);
+      border-radius: 8px;
+      padding: 40px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .logo-section {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .logo-shield {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .logo-text {
+      font-weight: 700;
+      color: var(--matrix-green);
+      font-size: 28px;
+      letter-spacing: 2px;
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 8px;
+    }
+
+    .logo-subtitle {
+      color: var(--cyan);
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .terminal-prompt {
+      background: #04102a;
+      border-radius: 6px;
+      padding: 12px 16px;
+      color: var(--matrix-green);
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 24px;
+      border: 1px solid rgba(0, 255, 65, 0.1);
+    }
+
+    .terminal-prompt .prompt {
+      color: var(--cyan);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      color: var(--cyan);
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .form-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(0, 255, 65, 0.2);
+      padding: 12px 16px;
+      border-radius: 6px;
+      color: #ffffff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--matrix-green);
+      box-shadow: 0 0 0 3px rgba(0, 255, 65, 0.1);
+    }
+
+    .form-input::placeholder {
+      color: rgba(127, 140, 149, 0.5);
+    }
+
+    .password-strength {
+      margin-top: 8px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--muted);
+    }
+
+    .password-strength.weak { color: #ef6a6a; }
+    .password-strength.medium { color: #ffa500; }
+    .password-strength.strong { color: var(--matrix-green); }
+
+    .btn-signup {
+      width: 100%;
+      background: linear-gradient(90deg, var(--cyan), var(--electric));
+      color: #001219;
+      padding: 14px 24px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-signup:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 217, 255, 0.3);
+    }
+
+    .divider {
+      text-align: center;
+      margin: 24px 0;
+      color: var(--muted);
+      font-size: 12px;
+      position: relative;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 40%;
+      height: 1px;
+      background: rgba(0, 255, 65, 0.2);
+    }
+
+    .divider::before {
+      left: 0;
+    }
+
+    .divider::after {
+      right: 0;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .login-link a {
+      color: var(--cyan);
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      transition: color 0.2s;
+    }
+
+    .login-link a:hover {
+      color: var(--matrix-green);
+      text-decoration: underline;
+    }
+
+    .error-message {
+      background: rgba(239, 106, 106, 0.1);
+      border: 1px solid rgba(239, 106, 106, 0.3);
+      color: #ef6a6a;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    .success-message {
+      background: rgba(0, 255, 65, 0.1);
+      border: 1px solid rgba(0, 255, 65, 0.3);
+      color: var(--matrix-green);
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-overlay"></div>
+  <div class="signup-container">
+    <a href="{{ url_for('cyber_landing') }}" class="back-link">
+      <span>←</span>
+      <span>Back</span>
+    </a>
+
+    <div class="signup-card">
+      <div class="logo-section">
+        <div class="logo-shield">🛡️</div>
+        <div class="logo-text">CYBER//GUARD</div>
+        <div class="logo-subtitle">> NEW USER REGISTRATION</div>
+      </div>
+
+      <div class="terminal-prompt">
+        <span class="prompt">$</span> create_user.sh
+      </div>
+
+      <div class="error-message" id="errorMessage"></div>
+      <div class="success-message" id="successMessage"></div>
+
+      <form id="signupForm" onsubmit="handleSignup(event)">
+        <div class="form-group">
+          <label class="form-label" for="username">Username</label>
+          <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            class="form-input" 
+            placeholder="> choose_username"
+            required
+            autocomplete="username"
+            minlength="3"
+            maxlength="20"
+            pattern="[a-zA-Z0-9_]+"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            class="form-input" 
+            placeholder="> user@domain.com"
+            required
+            autocomplete="email"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            class="form-input" 
+            placeholder="> ********"
+            required
+            autocomplete="new-password"
+            minlength="6"
+            oninput="checkPasswordStrength(this.value)"
+          >
+          <div class="password-strength" id="passwordStrength"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="confirmPassword">Confirm Password</label>
+          <input 
+            type="password" 
+            id="confirmPassword" 
+            name="confirmPassword" 
+            class="form-input" 
+            placeholder="> ********"
+            required
+            autocomplete="new-password"
+          >
+        </div>
+
+        <button type="submit" class="btn-signup">> CREATE ACCOUNT</button>
+      </form>
+
+      <div class="divider">OR</div>
+
+      <div class="login-link">
+        Already have an account? <a href="{{ url_for('cyber_login') }}">> LOGIN</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function checkPasswordStrength(password) {
+      const strengthDiv = document.getElementById('passwordStrength');
+      if (!password) {
+        strengthDiv.textContent = '';
+        strengthDiv.className = 'password-strength';
+        return;
+      }
+
+      let strength = 0;
+      if (password.length >= 8) strength++;
+      if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+      if (password.match(/[0-9]/)) strength++;
+      if (password.match(/[^a-zA-Z0-9]/)) strength++;
+
+      if (strength <= 1) {
+        strengthDiv.textContent = '> WEAK';
+        strengthDiv.className = 'password-strength weak';
+      } else if (strength === 2) {
+        strengthDiv.textContent = '> MEDIUM';
+        strengthDiv.className = 'password-strength medium';
+      } else {
+        strengthDiv.textContent = '> STRONG';
+        strengthDiv.className = 'password-strength strong';
+      }
+    }
+
+    function handleSignup(event) {
+      event.preventDefault();
+      const username = document.getElementById('username').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const errorMsg = document.getElementById('errorMessage');
+      const successMsg = document.getElementById('successMessage');
+
+      // Hide previous messages
+      errorMsg.classList.remove('show');
+      successMsg.classList.remove('show');
+
+      // Validation
+      if (password !== confirmPassword) {
+        errorMsg.textContent = '> ERROR: Passwords do not match.';
+        errorMsg.classList.add('show');
+        return;
+      }
+
+      if (password.length < 6) {
+        errorMsg.textContent = '> ERROR: Password must be at least 6 characters.';
+        errorMsg.classList.add('show');
+        return;
+      }
+
+      // Check if username already exists
+      const mockUsers = window.MOCK?.users || [];
+      if (mockUsers.find(u => u.username.toLowerCase() === username.toLowerCase())) {
+        errorMsg.textContent = '> ERROR: Username already exists.';
+        errorMsg.classList.add('show');
+        return;
+      }
+
+      // Create new user
+      const newUser = {
+        id: 'u' + (mockUsers.length + 1),
+        username: username.toLowerCase(),
+        displayName: username,
+        email: email,
+        avatar: null,
+        badges: ['starter'],
+        progress: {
+          phish_hunter: 0,
+          password_defense: 0,
+          social_engineering: 0,
+          network_challenge: 0
+        },
+        totalXP: 0,
+        level: 1,
+        joinedDate: new Date().toISOString()
+      };
+
+      // Add to mock users
+      mockUsers.push(newUser);
+      window.MOCK.users = mockUsers;
+
+      // Store user in sessionStorage
+      sessionStorage.setItem('currentUser', JSON.stringify(newUser));
+
+      // Show success and redirect
+      successMsg.textContent = '> SUCCESS: Account created! Redirecting...';
+      successMsg.classList.add('show');
+      
+      setTimeout(() => {
+        window.location.href = '{{ url_for("cyber_dashboard") }}';
+      }, 1500);
+    }
+
+    // Check if already logged in
+    if (sessionStorage.getItem('currentUser')) {
+      window.location.href = '{{ url_for("cyber_dashboard") }}';
+    }
+  </script>
+  <script src="{{ url_for('static', filename='mock.js') }}"></script>
+</body>
+</html>
+

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="hero">
+    <h1>🔐 Choose the Best 2FA Method</h1>
+    <p>Daily Mission: Learn which two-factor authentication methods are most secure for different situations.</p>
+    <div style="margin-top: 24px;">
+        <form action="{{ url_for('choose_2fa') }}" method="post">
+            <button class="primary" type="submit">Start Mission</button>
+        </form>
+    </div>
+</section>
+<section class="features">
+    <div class="feature">
+        <h3>🔒 Understand 2FA</h3>
+        <p>Learn about different two-factor authentication methods and when to use each.</p>
+    </div>
+    <div class="feature">
+        <h3>💡 Best Practices</h3>
+        <p>Discover which 2FA methods offer the best security for your accounts.</p>
+    </div>
+    <div class="feature">
+        <h3>🛡️ Secure Your Accounts</h3>
+        <p>Make informed decisions about protecting your accounts with the right 2FA method.</p>
+    </div>
+</section>
+<section style="margin-top: 48px;">
+    <h2 style="color: var(--matrix-green); margin-bottom: 24px;">📚 Learning Modules</h2>
+    <div class="features">
+        <div class="feature">
+            <h3>Multi-Factor Authentication (MFA)</h3>
+            <p>Understand how MFA works and why it's critical for protecting your accounts.</p>
+            <a href="{{ url_for('learn') }}" style="color: var(--cyan); text-decoration: underline;">Read more →</a>
+        </div>
+        <div class="feature">
+            <h3>2FA Method Selection</h3>
+            <p>Learn which authentication methods are most secure for different types of accounts.</p>
+            <a href="{{ url_for('learn') }}" style="color: var(--cyan); text-decoration: underline;">Read more →</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

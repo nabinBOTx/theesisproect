@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="result">
+  <h2>Your Inbox Score: {{ score }} / {{ total }}</h2>
+  <div class="score-bar"><div class="score-fill" style="width: {{ ((score if score>0 else 0)/total*100)|round(0, 'floor') }}%"></div></div>
+  <ol class="review-list">
+    {% for d in details %}
+    <li class="review-item">
+      <div class="review-q"><strong>{{ d.subject }}</strong> — from {{ d.sender }}</div>
+      <div class="review-a {{ 'correct' if d.correct else 'incorrect' }}">
+        <div><strong>Your action:</strong> {{ d.action|capitalize }}</div>
+        <div><strong>Ground truth:</strong> {{ 'Phish' if d.is_phish else 'Legit' }}</div>
+        {% if d.red_flags and d.red_flags|length %}
+        <div><strong>Red flags:</strong> {{ d.red_flags|join(', ') }}</div>
+        {% endif %}
+        <div class="explanation">{{ d.explanation }}</div>
+        <div class="email-link">Link: <code>{{ d.link_url }}</code></div>
+      </div>
+    </li>
+    {% endfor %}
+  </ol>
+  <div class="actions">
+    <form action="{{ url_for('inbox') }}" method="post" style="display:inline-block;">
+      <button class="primary" type="submit">Play Inbox Again</button>
+    </form>
+    <a href="{{ url_for('index') }}" style="margin-left:8px;">Back to Home</a>
+  </div>
+</section>
+{% endblock %}
+
+

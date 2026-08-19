@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="hero">
+    <h1>🎣 Phish Hunter</h1>
+    <p>Identify phishing attempts! Learn to spot suspicious URLs, emails, and messages.</p>
+    <div style="margin-top: 24px;">
+        <form action="{{ url_for('phish_hunter') }}" method="post">
+            <button class="primary" type="submit">Start Game</button>
+        </form>
+    </div>
+</section>
+<section class="features">
+    <div class="feature">
+        <h3>🎯 Spot the Phish</h3>
+        <p>Examine URLs, email subjects, and messages to identify phishing attempts.</p>
+    </div>
+    <div class="feature">
+        <h3>💡 Learn Patterns</h3>
+        <p>Get explanations for each item to understand common phishing tactics.</p>
+    </div>
+    <div class="feature">
+        <h3>🛡️ Stay Protected</h3>
+        <p>Improve your ability to recognize scams and protect yourself online.</p>
+    </div>
+</section>
+<section style="margin-top: 48px;">
+    <h2 style="color: var(--matrix-green); margin-bottom: 24px;">📚 Learning Modules</h2>
+    <div class="features">
+        <div class="feature">
+            <h3>Phishing Awareness</h3>
+            <p>Learn how phishing attacks work and how to identify suspicious emails, URLs, and messages.</p>
+            <a href="{{ url_for('learn') }}" style="color: var(--cyan); text-decoration: underline;">Read more →</a>
+        </div>
+        <div class="feature">
+            <h3>Phish Hunter Mastery</h3>
+            <p>Master the skills needed to identify phishing attempts and protect yourself from social engineering.</p>
+            <a href="{{ url_for('learn') }}" style="color: var(--cyan); text-decoration: underline;">Read more →</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

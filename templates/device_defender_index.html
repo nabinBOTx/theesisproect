@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="hero">
+    <h1>📱 Device Defender</h1>
+    <p>Secure a new phone! Pick the right security settings to protect your device from threats.</p>
+    <div style="margin-top: 24px;">
+        <form action="{{ url_for('device_defender') }}" method="post">
+            <button class="primary" type="submit">Start Game</button>
+        </form>
+    </div>
+</section>
+<section class="features">
+    <div class="feature">
+        <h3>🔒 Configure Settings</h3>
+        <p>Choose the best security settings for screen lock, app permissions, updates, and more.</p>
+    </div>
+    <div class="feature">
+        <h3>💡 Learn Best Practices</h3>
+        <p>Get explanations for each setting to understand why certain configurations are more secure.</p>
+    </div>
+    <div class="feature">
+        <h3>🛡️ Protect Your Device</h3>
+        <p>Master device security and learn to configure your phone for maximum protection.</p>
+    </div>
+</section>
+<section style="margin-top: 48px;">
+    <h2 style="color: var(--matrix-green); margin-bottom: 24px;">📚 Learning Modules</h2>
+    <div class="features">
+        <div class="feature">
+            <h3>Device Defender Security</h3>
+            <p>Learn how to configure your devices securely and protect them from unauthorized access.</p>
+            <a href="{{ url_for('learn') }}" style="color: var(--cyan); text-decoration: underline;">Read more →</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

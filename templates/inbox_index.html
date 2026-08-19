@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="hero">
+  <h1>Inbox Investigator</h1>
+  <p>Inspect emails, hover links, and decide: report, open, or delete. Earn points for safe decisions.</p>
+  <form action="{{ url_for('inbox') }}" method="post">
+    <button class="primary" type="submit">Start Inbox</button>
+  </form>
+</section>
+<section style="margin-top: 48px;">
+    <h2 style="color: var(--matrix-green); margin-bottom: 24px;">📚 Learning Modules</h2>
+    <div class="features">
+        <div class="feature">
+            <h3>Phishing Awareness</h3>
+            <p>Learn how phishing attacks work and how to identify suspicious emails and messages.</p>
+            <a href="{{ url_for('learn') }}" style="color: var(--cyan); text-decoration: underline;">Read more →</a>
+        </div>
+        <div class="feature">
+            <h3>Inbox Investigation</h3>
+            <p>Master the skills needed to investigate emails and identify phishing attempts.</p>
+            <a href="{{ url_for('learn') }}" style="color: var(--cyan); text-decoration: underline;">Read more →</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+

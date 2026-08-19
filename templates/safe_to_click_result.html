@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="hero">
+    <h1>🔗 Is This Safe to Click? - Results</h1>
+    <div style="text-align: center; margin: 24px 0;">
+        <div style="font-size: 48px; font-weight: 700; margin-bottom: 8px;">
+            {{ score }}/{{ total }}
+        </div>
+        <div class="score-bar" style="max-width: 400px; margin: 0 auto;">
+            <div class="score-fill" style="width: {{ (score/total*100)|round(0, 'floor') }}%"></div>
+        </div>
+        <p style="margin-top: 16px; color: var(--muted);">
+            {% if score == total %}
+                🏆 Perfect! You can spot dangerous links!
+            {% elif score >= total * 0.8 %}
+                🎯 Excellent! Great link-safety awareness!
+            {% elif score >= total * 0.6 %}
+                👍 Good job! Keep practicing!
+            {% else %}
+                📚 Review the explanations to improve.
+            {% endif %}
+        </p>
+    </div>
+</section>
+
+<section class="card">
+    <div class="card-body">
+        <h2 style="margin-bottom: 20px;">Review</h2>
+        <ol class="review-list">
+            {% for detail in details %}
+            <li class="review-item">
+                <div class="review-q">
+                    <strong style="word-break: break-word;">{{ detail.text }}</strong>
+                </div>
+                <div class="review-a {% if detail.correct %}correct{% else %}incorrect{% endif %}">
+                    <div style="margin-bottom: 8px;">
+                        <strong>Your answer:</strong> 
+                        {% if detail.user_guess == 'safe' %}
+                            ✅ Safe
+                        {% else %}
+                            🚨 Dangerous
+                        {% endif %}
+                    </div>
+                    <div style="margin-bottom: 8px;">
+                        <strong>Correct answer:</strong> 
+                        {% if detail.is_safe %}
+                            ✅ Safe
+                        {% else %}
+                            🚨 Dangerous
+                        {% endif %}
+                    </div>
+                    <div class="explanation">
+                        <strong>Explanation:</strong> {{ detail.explanation }}
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ol>
+        <div style="margin-top: 24px; display: flex; gap: 12px; justify-content: center;">
+            <form action="{{ url_for('safe_to_click') }}" method="post" style="display:inline;">
+                <button class="primary" type="submit">Play Again</button>
+            </form>
+            <a href="{{ url_for('index') }}">
+                <button class="primary" style="background: #2a3154; color: var(--text); border: 1px solid #242a45;">Home</button>
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

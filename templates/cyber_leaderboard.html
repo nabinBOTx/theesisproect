@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Leaderboard — CYBER//GUARD</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='cyber-theme.css') }}">
+  <style>
+    body {
+      background: #0f1419;
+      background-image: 
+        linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      min-height: 100vh;
+      position: relative;
+      font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+    }
+
+    .grid-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(rgba(0, 217, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 217, 255, 0.05) 1px, transparent 1px);
+      background-size: 100px 100px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .main-content {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+
+    .header-section {
+      margin-bottom: 48px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--cyan);
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 24px;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: #ffffff;
+    }
+
+    .title-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .trophy-icon {
+      font-size: 24px;
+      color: var(--matrix-green);
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 2px;
+    }
+
+    .global-rankings {
+      margin-bottom: 48px;
+    }
+
+    .rankings-title {
+      font-size: 24px;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .rankings-subtitle {
+      color: var(--cyan);
+      font-size: 14px;
+      margin-bottom: 32px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .podium {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .podium-item:nth-child(1) {
+      order: 1;
+    }
+
+    .podium-item:nth-child(2) {
+      order: 0;
+    }
+
+    .podium-item:nth-child(3) {
+      order: 2;
+    }
+
+    .podium-item {
+      text-align: center;
+      position: relative;
+    }
+
+    .podium-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--matrix-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #001219;
+      font-weight: 700;
+      font-size: 24px;
+      margin: 0 auto 12px;
+      border: 3px solid transparent;
+    }
+
+    .podium-name {
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .podium-level {
+      color: var(--cyan);
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    .podium-block {
+      width: 140px;
+      padding: 24px 16px;
+      border-radius: 8px;
+      font-weight: 700;
+      position: relative;
+    }
+
+    .podium-block.gold {
+      background: linear-gradient(135deg, #ffd700, #ffed4e);
+      color: #001219;
+      height: 180px;
+    }
+
+    .podium-block.silver {
+      background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+      color: #001219;
+      height: 160px;
+    }
+
+    .podium-block.bronze {
+      background: linear-gradient(135deg, #cd7f32, #e6a85c);
+      color: #001219;
+      height: 160px;
+    }
+
+    .podium-rank {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .podium-xp {
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    .rankings-list {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 255, 65, 0.1);
+      border-radius: 8px;
+      padding: 24px;
+    }
+
+    .rankings-list-title {
+      color: var(--cyan);
+      font-size: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 20px;
+    }
+
+    .ranking-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      transition: background 0.2s;
+    }
+
+    .ranking-item:last-child {
+      border-bottom: none;
+    }
+
+    .ranking-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .ranking-icon {
+      font-size: 20px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .ranking-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--matrix-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #001219;
+      font-weight: 700;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .ranking-info {
+      flex: 1;
+    }
+
+    .ranking-name {
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .ranking-level {
+      color: var(--cyan);
+      font-size: 12px;
+    }
+
+    .ranking-xp {
+      color: var(--matrix-green);
+      font-weight: 700;
+      font-size: 14px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .footer-attribution {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #ffffff;
+      color: #001219;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      z-index: 10;
+    }
+
+    .footer-attribution .icon {
+      font-size: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .podium {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .podium-block {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .ranking-item {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-overlay"></div>
+  <div class="main-content">
+    <div class="header-section">
+      <a href="{{ url_for('cyber_dashboard') }}" class="back-link">
+        <span>←</span>
+        <span>Back</span>
+      </a>
+      <div class="title-section">
+        <span class="trophy-icon">🏆</span>
+        <h1 class="page-title">LEADERBOARD</h1>
+      </div>
+    </div>
+
+    <section class="global-rankings">
+      <h2 class="rankings-title">Global Rankings</h2>
+      <p class="rankings-subtitle">> Top cyber defenders worldwide</p>
+
+      <div class="podium">
+        <div class="podium-item">
+          <div class="podium-avatar">S</div>
+          <div class="podium-name">SecureKid</div>
+          <div class="podium-level">Level 11</div>
+          <div class="podium-block silver">
+            <div class="podium-rank">#2</div>
+            <div class="podium-xp">14,890 XP</div>
+          </div>
+        </div>
+
+        <div class="podium-item">
+          <div class="podium-avatar">H</div>
+          <div class="podium-name">H4ck3rPro</div>
+          <div class="podium-level">Level 12</div>
+          <div class="podium-block gold">
+            <div class="podium-rank">#1</div>
+            <div class="podium-xp">15,420 XP</div>
+          </div>
+        </div>
+
+        <div class="podium-item">
+          <div class="podium-avatar">C</div>
+          <div class="podium-name">CipherMaster</div>
+          <div class="podium-level">Level 11</div>
+          <div class="podium-block bronze">
+            <div class="podium-rank">#3</div>
+            <div class="podium-xp">13,560 XP</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="rankings-list">
+      <div class="rankings-list-title">> rankings.db</div>
+      
+      <div class="ranking-item">
+        <span class="ranking-icon">👑</span>
+        <div class="ranking-avatar">H</div>
+        <div class="ranking-info">
+          <div class="ranking-name">H4ck3rPro</div>
+          <div class="ranking-level">Level 12</div>
+        </div>
+        <div class="ranking-xp">15,420 XP</div>
+      </div>
+
+      <div class="ranking-item">
+        <span class="ranking-icon">🛡️</span>
+        <div class="ranking-avatar">S</div>
+        <div class="ranking-info">
+          <div class="ranking-name">SecureKid</div>
+          <div class="ranking-level">Level 11</div>
+        </div>
+        <div class="ranking-xp">14,890 XP</div>
+      </div>
+
+      <div class="ranking-item">
+        <span class="ranking-icon">🔒</span>
+        <div class="ranking-avatar">C</div>
+        <div class="ranking-info">
+          <div class="ranking-name">CipherMaster</div>
+          <div class="ranking-level">Level 11</div>
+        </div>
+        <div class="ranking-xp">13,560 XP</div>
+      </div>
+
+      <div class="ranking-item">
+        <span class="ranking-icon">🔒</span>
+        <div class="ranking-avatar">N</div>
+        <div class="ranking-info">
+          <div class="ranking-name">NetSecNinja</div>
+          <div class="ranking-level">Level 10</div>
+        </div>
+        <div class="ranking-xp">12,340 XP</div>
+      </div>
+
+      <div class="ranking-item">
+        <span class="ranking-icon">🔒</span>
+        <div class="ranking-avatar">B</div>
+        <div class="ranking-info">
+          <div class="ranking-name">ByteGuard</div>
+          <div class="ranking-level">Level 10</div>
+        </div>
+        <div class="ranking-xp">11,890 XP</div>
+      </div>
+
+      <div class="ranking-item">
+        <span class="ranking-icon">🔒</span>
+        <div class="ranking-avatar">A</div>
+        <div class="ranking-info">
+          <div class="ranking-name">AuthMaster</div>
+          <div class="ranking-level">Level 9</div>
+        </div>
+        <div class="ranking-xp">10,560 XP</div>
+      </div>
+
+      <div class="ranking-item">
+        <span class="ranking-icon">🔒</span>
+        <div class="ranking-avatar">F</div>
+        <div class="ranking-info">
+          <div class="ranking-name">FirewallPro</div>
+          <div class="ranking-level">Level 9</div>
+        </div>
+        <div class="ranking-xp">9,780 XP</div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
+

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="card">
+    <div class="card-header">
+        <div class="progress-wrap">
+            <div>Challenge {{ number }} of {{ total }}</div>
+            <div class="progress">
+                <div class="progress-bar" style="width: {{ (number/total*100)|round(0, 'floor') }}%"></div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div style="text-align: center; margin-bottom: 24px;">
+            <div style="font-size: 18px; font-weight: 600; background: #12182b; border: 2px solid #232a49; padding: 20px; border-radius: 12px; 
+                        word-break: break-word; color: var(--text); line-height: 1.6;">
+                {{ challenge.text }}
+            </div>
+        </div>
+        <p class="prompt" style="text-align: center; font-size: 18px; margin-bottom: 24px;">
+            Is this a <strong>phishing</strong> attempt or <strong>legitimate</strong>?
+        </p>
+        <form action="{{ url_for('phish_hunter_guess') }}" method="post" class="choices" style="max-width: 400px; margin: 0 auto;">
+            <label class="choice choice-hover" style="cursor: pointer;">
+                <input class="visually-hidden" type="radio" name="guess" value="phish" required />
+                <span class="bullet"></span>
+                <span class="choice-text">🎣 Phishing</span>
+            </label>
+            <label class="choice choice-hover" style="cursor: pointer;">
+                <input class="visually-hidden" type="radio" name="guess" value="legitimate" required />
+                <span class="bullet"></span>
+                <span class="choice-text">✅ Legitimate</span>
+            </label>
+            <div class="actions">
+                <button class="primary" type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
